@@ -27,7 +27,14 @@ app.get('/csvdata', (req, res) => {
 
       fs.createReadStream(filePath)
           .pipe(csvParser())
-          .on('data', (data) => results.push(data))
+          .on('data', (data) => {
+            const vals = Object.values(data);
+            results.push({
+              index: vals[0],
+              lat: vals[1],
+              lng: vals[2],
+            })
+          })
           .on('end', () => {
             dataArray.push(results);
             readFiles(index + 1);
